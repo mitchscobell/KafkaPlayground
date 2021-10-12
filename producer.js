@@ -23,7 +23,7 @@ async function run() {
       // if message is uppercase, partition 0, else partition 1
       const partition = message[0] < "a" ? 0 : 1;
 
-      await producer.send({
+      const result = await producer.send({
         topic: "MyKafkaTopic",
         messages: [
           {
@@ -32,7 +32,10 @@ async function run() {
           },
         ],
       });
-      console.log("Sent successfully!");
+      
+      console.log(`Sent successfully! ${JSON.stringify(result)}`);
+
+      await producer.disconnect();
     } catch (ex) {
       console.error(ex);
     } finally {
