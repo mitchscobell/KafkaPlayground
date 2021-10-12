@@ -45,6 +45,8 @@ node producer.js <message here!>
 Last consume the messages by subscribing!
 ```
 node consumer.js
+# or provide topic and/or consumer group
+node consumer.js --topic testtopic --group group  
 ```
 
 PRO TIP: Run two consumers to see which partition zookeeper sends the messages to!

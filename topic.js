@@ -1,8 +1,11 @@
 const { Kafka } = require("kafkajs");
 
+let topic = process.argv[2];
+
 run();
 
 async function run() {
+    topic = !topic ? "MyKafkaTopic" : topic;
 
   try {
     const kafka = new Kafka({

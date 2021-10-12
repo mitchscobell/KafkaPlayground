@@ -1,6 +1,7 @@
 const { Kafka } = require("kafkajs");
 
 const message = process.argv[2];
+let topic = process.argv[3];
 
 run();
 
@@ -9,6 +10,9 @@ async function run() {
     console.log("No Message Entered!");
     return;
   } else {
+
+    topic = !topic ?  'MyKafkaTopic' : topic;
+
     try {
       const kafka = new Kafka({
         clientId: "kafkaplayground",
@@ -24,7 +28,7 @@ async function run() {
       const partition = message[0] < "a" ? 0 : 1;
 
       const result = await producer.send({
-        topic: "MyKafkaTopic",
+        topic: topic,
         messages: [
           {
             value: message,
