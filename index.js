@@ -4,6 +4,7 @@ const Consumer = require("./consumer");
 run();
 
 async function run() {
+  return;
   console.log("started");
   const topicName = "NewTopic2";
   const message = "Message!!";

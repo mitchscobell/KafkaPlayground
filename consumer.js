@@ -75,6 +75,6 @@ class Consumer {
   }
 }
 
-//consoleRun();
+consoleRun();
 
 module.exports = Consumer;

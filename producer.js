@@ -83,6 +83,6 @@ class Producer {
   }
 }
 
-//consoleRun();
+consoleRun();
 
 module.exports = Producer;
