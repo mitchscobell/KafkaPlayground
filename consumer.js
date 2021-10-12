@@ -26,7 +26,7 @@ async function run() {
   console.log(argv);
 
   const topic = argv.topic ? argv.topic : "KafkaTopic";
-  const group = argv.group ? argv.group : "Consumer Group";
+  const group = argv.group ? argv.group : "ConsumerGroup";
 
   console.log(`Kafka Topic: ${topic}`);
   console.log(`Kafka Consumer Group: ${group}`);

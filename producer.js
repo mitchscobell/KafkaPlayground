@@ -25,16 +25,16 @@ async function run() {
   console.log(argv);
 
   const topic = argv.topic ? argv.topic : "KafkaTopic";
-  const message = argv.message ? argv.message : "Consumer Group";
+  const message = argv.message ? argv.message : "";
 
   console.log(`Kafka Topic: ${topic}`);
-  console.log(`Kafka Message: ${message}`);
 
   if (!message) {
     console.log("No Message Entered!");
     return;
   } else {
     try {
+      console.log(`Kafka Message: ${message}`);
       const kafka = new Kafka({
         clientId: "kafkaplayground",
         brokers: ["192.168.1.233:9092"],
@@ -48,6 +48,8 @@ async function run() {
       // if message is uppercase, partition 0, else partition 1
       const partition = message[0] < "a" ? 0 : 1;
 
+      console.log(`Partition: ${partition}`);
+      
       const result = await producer.send({
         topic: topic,
         messages: [
