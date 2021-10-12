@@ -1,26 +1,26 @@
 const { Kafka } = require("kafkajs");
 const yargs = require("yargs");
 
-async function run() {
-  const argv = yargs
-    .command("--topic", "parse user topic", function (yargs, helpOrVersionSet) {
-      return yargs.option("topic", {
-        alias: "t",
-        default: "KafkaTopic",
-      });
-    })
-    .help().argv;
+// async function consoleRun() {
+//   const argv = yargs
+//     .command("--topic", "parse user topic", function (yargs, helpOrVersionSet) {
+//       return yargs.option("topic", {
+//         alias: "t",
+//         default: "KafkaTopic",
+//       });
+//     })
+//     .help().argv;
 
-  console.log(argv);
+//   console.log(argv);
 
-  const topic = argv.topic ? argv.topic : "KafkaTopic";
+//   const topic = argv.topic ? argv.topic : "KafkaTopic";
 
-  console.log(`Kafka Topic: ${topic}`);
+//   console.log(`Kafka Topic: ${topic}`);
 
-  //topicRun(topic);
-  const run = new Topic(topic);
-  await run.topicRun();
-}
+//   //topicRun(topic);
+//   const run = new Topic(topic);
+//   await run.topicRun();
+// }
 
 class Topic {
   constructor(topic) {
@@ -54,11 +54,11 @@ class Topic {
     } catch (ex) {
       console.error(ex);
     } finally {
-      process.exit(0);
+      //process.exit(0);
     }
   }
 }
 
-run();
-
 module.exports = Topic;
+
+// consoleRun();

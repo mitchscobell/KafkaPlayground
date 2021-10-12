@@ -1,9 +1,7 @@
 const { Kafka } = require("kafkajs");
 const yargs = require("yargs");
 
-run();
-
-async function run() {
+async function consoleRun() {
   const argv = yargs
     .command("--topic", "parse user topic", function (yargs, helpOrVersionSet) {
       return yargs.option("topic", {
@@ -31,34 +29,52 @@ async function run() {
   console.log(`Kafka Topic: ${topic}`);
   console.log(`Kafka Consumer Group: ${group}`);
 
-  try {
-    const kafka = new Kafka({
-      clientId: "kafkaplayground",
-      brokers: ["192.168.1.233:9092"],
-    });
+  const consumer = new Consumer(group, topic);
+  await consumer.runConsumer();
+}
 
-    const consumer = kafka.consumer({
-      groupId: group,
-    });
+class Consumer {
+  constructor(group, topic) {
+    this.group = group;
+    this.topic = topic;
+  }
 
-    console.log("Connecting...");
-    await consumer.connect();
-    console.log("Connected!");
+  async runConsumer() {
+    const group = this.group;
+    const topic = this.topic;
+    try {
+      const kafka = new Kafka({
+        clientId: "kafkaplayground",
+        brokers: ["192.168.1.233:9092"],
+      });
 
-    await consumer.subscribe({
-      topic: topic,
-      fromBeginning: true,
-    });
+      const consumer = kafka.consumer({
+        groupId: group,
+      });
 
-    await consumer.run({
-      eachMessage: async (result) => {
-        console.log(
-          `Received Message: ${result.message.value} on partition ${result.partition}`
-        );
-      },
-    });
-  } catch (ex) {
-    console.error(ex);
-  } finally {
+      console.log("Connecting...");
+      await consumer.connect();
+      console.log("Connected!");
+
+      await consumer.subscribe({
+        topic: topic,
+        fromBeginning: true,
+      });
+
+      await consumer.run({
+        eachMessage: async (result) => {
+          console.log(
+            `Received Message: ${result.message.value} on partition ${result.partition}`
+          );
+        },
+      });
+    } catch (ex) {
+      console.error(ex);
+    } finally {
+    }
   }
 }
+
+//consoleRun();
+
+module.exports = Consumer;
