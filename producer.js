@@ -60,13 +60,12 @@ async function run() {
         ],
       });
 
-      console.log(`Sent successfully! ${JSON.stringify(result)}`);
+      console.log(`Sent successfully! \n${JSON.stringify(result)}`);
 
       await producer.disconnect();
     } catch (ex) {
       console.error(ex);
     } finally {
-      console.log("exiting...");
       process.exit(0);
     }
   }
