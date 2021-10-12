@@ -1,11 +1,23 @@
 const { Kafka } = require("kafkajs");
-
-let topic = process.argv[2];
+const yargs = require("yargs");
 
 run();
 
 async function run() {
-    topic = !topic ? "MyKafkaTopic" : topic;
+  const argv = yargs
+    .command("--topic", "parse user topic", function (yargs, helpOrVersionSet) {
+      return yargs.option("topic", {
+        alias: "t",
+        default: "KafkaTopic",
+      });
+    })
+    .help().argv;
+
+  console.log(argv);
+
+  const topic = argv.topic ? argv.topic : "KafkaTopic";
+
+  console.log(`Kafka Topic: ${topic}`);
 
   try {
     const kafka = new Kafka({
@@ -21,7 +33,7 @@ async function run() {
     await admin.createTopics({
       topics: [
         {
-          topic: "MyKafkaTopic",
+          topic: topic,
           numPartitions: 2,
         },
       ],
@@ -29,7 +41,6 @@ async function run() {
 
     console.log("Created Successfully!");
     await admin.disconnect();
-
   } catch (ex) {
     console.error(ex);
   } finally {

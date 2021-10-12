@@ -1,18 +1,39 @@
 const { Kafka } = require("kafkajs");
-
-const message = process.argv[2];
-let topic = process.argv[3];
+const yargs = require("yargs");
 
 run();
 
 async function run() {
+  const argv = yargs
+    .command(
+      "--message",
+      "parse user message",
+      function (yargs, helpOrVersionSet) {
+        return yargs.option("message", {
+          alias: "m",
+        });
+      }
+    )
+    .command("--topic", "parse user topic", function (yargs, helpOrVersionSet) {
+      return yargs.option("t", {
+        alias: "t",
+        default: "KafkaTopic",
+      });
+    })
+    .help().argv;
+
+  console.log(argv);
+
+  const topic = argv.topic ? argv.topic : "KafkaTopic";
+  const message = argv.message ? argv.message : "Consumer Group";
+
+  console.log(`Kafka Topic: ${topic}`);
+  console.log(`Kafka Message: ${message}`);
+
   if (!message) {
     console.log("No Message Entered!");
     return;
   } else {
-
-    topic = !topic ?  'MyKafkaTopic' : topic;
-
     try {
       const kafka = new Kafka({
         clientId: "kafkaplayground",
@@ -36,7 +57,7 @@ async function run() {
           },
         ],
       });
-      
+
       console.log(`Sent successfully! ${JSON.stringify(result)}`);
 
       await producer.disconnect();
