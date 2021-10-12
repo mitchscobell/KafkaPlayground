@@ -29,3 +29,22 @@ Put local host name into the docker run command
 ```
 docker run -p 9092:9092 --name kafka  -e KAFKA_ZOOKEEPER_CONNECT=<localhostname>:2181 -e KAFKA_ADVERTISED_LISTENERS=PLAINTEXT://<localhostname>:9092 -e KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1 -d confluentinc/cp-kafka 
 ```
+
+## Usage
+
+First create the topic
+```
+node topic.js
+```
+
+Second post a message by sending to the producer
+```
+node producer.js <message here!>
+```
+
+Last consume the messages by subscribing!
+```
+node consumer.js
+```
+
+PRO TIP: Run two consumers to see which partition zookeeper sends the messages to!
