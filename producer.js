@@ -33,40 +33,44 @@ async function run() {
     console.log("No Message Entered!");
     return;
   } else {
-    try {
-      console.log(`Kafka Message: ${message}`);
-      const kafka = new Kafka({
-        clientId: "kafkaplayground",
-        brokers: ["192.168.1.233:9092"],
-      });
+    console.log(`Kafka Message: ${message}`);
+    producerRun(message, topic);
+  }
+}
 
-      const producer = kafka.producer();
-      console.log("Connecting...");
-      await producer.connect();
-      console.log("Connected!");
+async function producerRun(message, topic) {
+  try {
+    const kafka = new Kafka({
+      clientId: "kafkaplayground",
+      brokers: ["192.168.1.233:9092"],
+    });
 
-      // if message is uppercase, partition 0, else partition 1
-      const partition = message[0] < "a" ? 0 : 1;
+    const producer = kafka.producer();
+    console.log("Connecting...");
+    await producer.connect();
+    console.log("Connected!");
 
-      console.log(`Partition: ${partition}`);
-      
-      const result = await producer.send({
-        topic: topic,
-        messages: [
-          {
-            value: message,
-            partition: partition,
-          },
-        ],
-      });
+    // if message is uppercase, partition 0, else partition 1
+    const partition = message[0] < "a" ? 0 : 1;
 
-      console.log(`Sent successfully! \n${JSON.stringify(result)}`);
+    console.log(`Partition: ${partition}`);
+    
+    const result = await producer.send({
+      topic: topic,
+      messages: [
+        {
+          value: message,
+          partition: partition,
+        },
+      ],
+    });
 
-      await producer.disconnect();
-    } catch (ex) {
-      console.error(ex);
-    } finally {
-      process.exit(0);
-    }
+    console.log(`Sent successfully! \n${JSON.stringify(result)}`);
+
+    await producer.disconnect();
+  } catch (ex) {
+    console.error(ex);
+  } finally {
+    process.exit(0);
   }
 }

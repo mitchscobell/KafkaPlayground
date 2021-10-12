@@ -1,8 +1,6 @@
 const { Kafka } = require("kafkajs");
 const yargs = require("yargs");
 
-run();
-
 async function run() {
   const argv = yargs
     .command("--topic", "parse user topic", function (yargs, helpOrVersionSet) {
@@ -19,31 +17,48 @@ async function run() {
 
   console.log(`Kafka Topic: ${topic}`);
 
-  try {
-    const kafka = new Kafka({
-      clientId: "kafkaplayground",
-      brokers: ["192.168.1.233:9092"],
-    });
+  //topicRun(topic);
+  const run = new Topic(topic);
+  await run.topicRun();
+}
 
-    const admin = kafka.admin();
-    console.log("Connecting...");
-    await admin.connect();
-    console.log("Connected!");
+class Topic {
+  constructor(topic) {
+    this.topic = topic;
+  }
 
-    await admin.createTopics({
-      topics: [
-        {
-          topic: topic,
-          numPartitions: 2,
-        },
-      ],
-    });
+  async topicRun() {
+    const topic = this.topic;
+    try {
+      const kafka = new Kafka({
+        clientId: "kafkaplayground",
+        brokers: ["192.168.1.233:9092"],
+      });
 
-    console.log("Created Successfully!");
-    await admin.disconnect();
-  } catch (ex) {
-    console.error(ex);
-  } finally {
-    process.exit(0);
+      const admin = kafka.admin();
+      console.log("Connecting...");
+      await admin.connect();
+      console.log("Connected!");
+
+      await admin.createTopics({
+        topics: [
+          {
+            topic: topic,
+            numPartitions: 2,
+          },
+        ],
+      });
+
+      console.log("Created Successfully!");
+      await admin.disconnect();
+    } catch (ex) {
+      console.error(ex);
+    } finally {
+      process.exit(0);
+    }
   }
 }
+
+run();
+
+module.exports = Topic;
